@@ -1,46 +1,42 @@
-// index.js: The file containing the logic for the course of the game, which depends on Word.js and:
 let Word = require('./word');
 let inquirer = require("inquirer")
 let wordArray = ["one", "two", "three", "four"];
-let currentWord = Array.from((wordArray.splice((Math.floor(Math.random() * wordArray.length)), 1))[0]);
-
+let currentWord = (wordArray.splice(0, 1))[0];
 let wordOdj = new Word(currentWord);
-
-// let placeholder = wordLength.join(" ");
-
-let incorrectLetters = [];
-let correctLetters = [];
-let count = 0;
 
 let game = function() {
 
   console.log("\n* Guess this word * \n-------------------\n" + wordOdj.placeholder() + "\n-------------------");
 
-  if (wordOdj.incorrect.length >= 4){
-    // game ends
-    console.log("end");
+  // User ran out of guesses
+  if (wordOdj.incorrect === 0){
+    console.log("\nYou ran out of tries. :( \nBetter luck next time.\n");
     return;
   }
-    inquirer.prompt({
-        name: "letter",
-        type: "text",
-        message: "Enter your guess.",
-    }).then(function(input) {
-      // console.log(input);
-      wordOdj.newGuess(input.letter);
-      if(wordOdj.wordComplete()){ 
-        console.log(`Great job! The answer was ${wordOdj.placeholder()}.`);
-        return; 
-        }
-      
-      count ++;
-      game();
-    });
+  inquirer.prompt({
+      name: "letter",
+      type: "text",
+      message: "Enter your guess.",
+  }).then(function(input) {
+    wordOdj.newGuess(input.letter);
 
+    // User guessed all letters in the word
+    if(wordOdj.correct.length === wordOdj.value.length){ 
+
+      console.log(`Great job! The answer was ${wordOdj.placeholder()}.`);
+      currentWord = (wordArray.splice(0, 1))[0];
+      console.log("​wordArray", wordArray)
+			console.log("​game -> currentWord", currentWord)
+      wordOdj = new Word(currentWord);
+      wordOdj.incorrect = 6;
+      // Ran out of words
+      if (currentWord === undefined) {
+        return console.log("Looks like we are all out of words. Thanks for playing!");
+      }
+      return game();
+      }
+    
+    game();
+  });
 };
-
 game();
-
-// Randomly selects a word and uses the Word constructor to store it
-
-// Prompts the user for each guess and keeps track of the user's remaining guesses

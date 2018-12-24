@@ -1,17 +1,11 @@
 let Letter = require('./letter');
 
-let wordArray = ["one", "two", "three"];
-let randomIndex = [Math.floor(Math.random() * wordArray.length)];
-let currentWord = Array.from(wordArray[randomIndex]);
-
-// let placeholder = wordLength.join(" ");
-
-// Word.js: Contains a constructor, Word that depends on the Letter constructor. This is used to create an object representing the current word the user is attempting to guess. That means the constructor should define:
 let Word = function(value) {
   this.value = value;
+
   this.correct = '';
-  this.incorrect = '';
-  this.trys = ''
+  this.incorrect = 6;
+
   this.letterObj = [];
   for(let i = 0; i < value.length; i++) {
     this.letterObj.push(new Letter(this.value[i]));
@@ -26,27 +20,28 @@ let Word = function(value) {
   };
 
   this.newGuess = function(input) {
-    this.input = input;
+    this.response = "incorrect...";
 
     if (this.correct.indexOf(input) != -1) {
-      return console.log('\nDuplicate letter, try again.');
+      return console.log('\n\n\nDuplicate letter, try again.\n');
     } 
-    this.trys += input;
+   
     for (let i=0; i < this.letterObj.length; i++) {
       if (this.letterObj[i].value === input) {
         this.letterObj[i].guessed = true;
         this.correct += input;
-        return console.log(`\nGood job! ${input} was a correct guess.`);
+        this.response = "correct!"
       }
-      return this.incorrect += input;
-    } 
-  };
-
-  this.wordComplete = function() {
-    if (!this.letterObj.guess) return false;
-  };
-   return true;
+    }
+    if (this.response === "incorrect...") {
+      this.incorrect --;
+      if (this.incorrect === 0) {
+        return;
+      }
+      return console.log(`\n\n\nThat guess was ${this.response} You have ${this.incorrect} tries left.\n`);
+    }
+    console.log(`\n\n\nThat guess was ${this.response}\n`);
+  }; 
 };
-
 
 module.exports = Word;
