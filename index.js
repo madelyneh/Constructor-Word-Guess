@@ -16,7 +16,7 @@ let game = function() {
 
   console.log("\n* Guess this word * \n-------------------\n" + wordOdj.placeholder() + "\n-------------------");
 
-  if (count >= 4){
+  if (wordOdj.incorrect.length >= 4){
     // game ends
     console.log("end");
     return;
@@ -28,6 +28,11 @@ let game = function() {
     }).then(function(input) {
       // console.log(input);
       wordOdj.newGuess(input.letter);
+      if(wordOdj.wordComplete()){ 
+        console.log(`Great job! The answer was ${wordOdj.placeholder()}.`);
+        return; 
+        }
+      
       count ++;
       game();
     });

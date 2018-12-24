@@ -9,6 +9,9 @@ let currentWord = Array.from(wordArray[randomIndex]);
 // Word.js: Contains a constructor, Word that depends on the Letter constructor. This is used to create an object representing the current word the user is attempting to guess. That means the constructor should define:
 let Word = function(value) {
   this.value = value;
+  this.correct = '';
+  this.incorrect = '';
+  this.trys = ''
   this.letterObj = [];
   for(let i = 0; i < value.length; i++) {
     this.letterObj.push(new Letter(this.value[i]));
@@ -24,15 +27,25 @@ let Word = function(value) {
 
   this.newGuess = function(input) {
     this.input = input;
-  
+
+    if (this.correct.indexOf(input) != -1) {
+      return console.log('\nDuplicate letter, try again.');
+    } 
+    this.trys += input;
     for (let i=0; i < this.letterObj.length; i++) {
       if (this.letterObj[i].value === input) {
         this.letterObj[i].guessed = true;
-        
-        console.log("Good job! " + input + " was a correct guess.");
+        this.correct += input;
+        return console.log(`\nGood job! ${input} was a correct guess.`);
       }
+      return this.incorrect += input;
     } 
   };
+
+  this.wordComplete = function() {
+    if (!this.letterObj.guess) return false;
+  };
+   return true;
 };
 
 
